@@ -11,6 +11,8 @@ error checking
 handling as well
 loop to ask if more inputs
 ask if want pdf exported (next longest part)
+maybe either switch header pay to be amount or add new secondary header to store some info?
+maybe make the secondary header as main header?
 ???
 """
 
@@ -32,9 +34,7 @@ def main():
 
     # this should find the current 'pay' amount, if today is payday, asks for amount
     # else if not payday, loads previous amount from current csv
-    # I think I need to if 'payday' open previous week and get previous pay
-    # else if not payday, open current week file and get pay?
-    # this one needs work
+    # this one needs work?
     pay = pay_day(week_start, current_date, current_file)
 
     # get what was purchased
@@ -95,9 +95,13 @@ def pay_day(week_start, current_date, current_file):
             reader = DictReader(file)
             for row in reader:
                 last_row = row
-            if last_row:
-                # noinspection PyTypeChecker
-                pay = float(last_row["Pay"])
+            try:
+                if last_row:
+                    # noinspection PyTypeChecker
+                    pay = float(last_row["Pay"])
+            except UnboundLocalError:
+                pay = float(input("Pay amount: "))
+
     return pay
 
 
